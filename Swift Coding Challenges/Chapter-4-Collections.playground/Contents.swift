@@ -187,7 +187,7 @@ class LinkedList<T> {
         var currentNode = start
         
         while let node = currentNode {
-            print(node.letter, terminator: " ")
+//            print(node.letter, terminator: " ")
             currentNode = node.nextNode
         }
     }
@@ -249,7 +249,7 @@ func challenge44Test(withString: String) {
         previousNode = newNode
     }
     
-    print(list.centerNode?.letter ?? "c")
+//    print(list.centerNode?.letter ?? "c")
 }
 
 challenge44Test(withString: "12345")
@@ -421,4 +421,82 @@ challenge48()
 /**********************************************************/
 // Challenge 49
 // Sum the even repeats
+// Write a function that accepts a variadic array of integers and returns the sum of all numbers that appear an even number of times
 
+func challenge49(_ numbers: Int...) -> Int {
+    var sum: Int = 0
+    let set = NSCountedSet(array: numbers)
+    
+    for number in set {
+        let numberAsInt = number as! Int
+        if set.count(for: numberAsInt) % 2 == 0 {
+            sum += numberAsInt
+        }
+    }
+    
+    return sum
+}
+
+// Without using a force downcast.  Using for case let.
+func challenge49b(_ numbers: Int...) -> Int {
+    var sum: Int = 0
+    let set = NSCountedSet(array: numbers)
+    
+    for case let item as Int in set {
+        if set.count(for: item) % 2 == 0 {
+            sum += item
+        }
+    }
+    return sum
+}
+
+assert(challenge49(1, 2, 2, 3, 3, 4) == 5, "Challenge 49 failed")
+assert(challenge49(5, 5, 5, 12, 12) == 12, "Challenge 49 failed")
+assert(challenge49(1, 1, 2, 2, 3, 3, 4, 4) == 10, "Challenge 49 failed")
+
+/**********************************************************/
+// Challenge 50
+// Count the largest range
+// Write a function that accepts an array of positive and negative numbers and returns a closed range containing the position of the contiguous positive numbers that sum to the highest value or nil if nothing was found.
+
+func challenge50(input: [Int]) -> CountableClosedRange<Int>? {
+
+    var bestRange: CountableClosedRange<Int>? = nil
+    var bestSum: Int = 0
+    
+    // These track the current sequence of positive integers
+    var currentStart: Int? = nil
+    var currentSum: Int = 0
+    
+    for (index, number) in input.enumerated() {
+        if number > 0 {
+            
+            // Set the start for the current range (if not, use the current index)
+            currentStart = currentStart ?? index
+            currentSum += number
+            
+            if currentSum > bestSum {
+                bestRange = currentStart!...index
+                bestSum = currentSum
+            }
+        } else {
+            // We have a negative number. Reset the current range
+            currentSum = 0
+            currentStart = nil
+        
+        }
+    }
+    
+    return bestRange
+    
+}
+
+assert(challenge50(input: [0,1,1,-1,2,3,1])! == 4...6, "Challenge 50 failed")
+assert(challenge50(input: [10,20,30,-10,-20,10,20])! == 0...2,  "Challenge 50 failed")
+assert(challenge50(input: [1,-1,2,-1])! == 2...2,  "Challenge 50 failed")
+assert(challenge50(input: [2,0,2,0,2])! == 0...0,  "Challenge 50 failed")
+assert(challenge50(input: [Int]()) == nil,  "Challenge 50 failed")
+
+/**********************************************************/
+// Challenge 51
+// Reversing linked lists

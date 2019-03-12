@@ -141,3 +141,284 @@ assert([1,2,9].challenge41() == 2, "Challenge 41 failed")
 assert([1,3,5,7,9].challenge41() == 5, "Challenge 41 failed")
 assert([1,2,3,4].challenge41() == 2.5,  "Challenge 41 failed")
 assert([Int]().challenge41() == nil, "Challenge 41 failed")
+
+/**********************************************************/
+// Challenge 42
+// Recreate index(of:)
+// Write an extension for all collections that implements the index(of:) method
+
+extension Collection where Iterator.Element: Equatable {
+    func challenge42(indexOf: Iterator.Element) -> Int? {
+        for (index, element) in self.enumerated() {
+            if element == indexOf {
+                return index
+            }
+        }
+        return nil
+    }
+}
+
+assert([1,2,3].challenge42(indexOf: 1) == 0, "Challenge 42 failed")
+assert([1,2,3].challenge42(indexOf: 3) == 2, "Challenge 42 failed")
+assert([1,2,3].challenge42(indexOf: 5) == nil, "Challenge 42 failed")
+assert(["a", "b", "ab", "0"].challenge42(indexOf: "ab") == 2, "Challenge 42 failed")
+
+/**********************************************************/
+// Challenge 43
+// Linked lists
+// Create a linked list of lower English alphabet letters along with a method that traverses all nodes and prints their letters on a single line separated by spaces.
+
+class LinkedListNode<T> {
+    
+    var letter: T
+    var nextNode: LinkedListNode?
+    
+    init(letter: T) {
+        self.letter = letter
+    }
+    
+    
+}
+
+class LinkedList<T> {
+    var start: LinkedListNode<T>?
+    
+    func printNodes() {
+        var currentNode = start
+        
+        while let node = currentNode {
+            print(node.letter, terminator: " ")
+            currentNode = node.nextNode
+        }
+    }
+}
+
+func challenge43() {
+    let list = LinkedList<Character>()
+    var previousNode: LinkedListNode<Character>? = nil
+    
+    for letter in "abcdefghijklmnopqrstuvwxyz" {
+        let node = LinkedListNode(letter: letter)
+        
+        if let predecessor = previousNode {
+            predecessor.nextNode = node
+        } else {
+            list.start = node
+        }
+        
+        previousNode = node
+    }
+    
+    list.printNodes()
+}
+
+// challenge43()
+
+/**********************************************************/
+// Challenge 44
+// LinkedList mid-point
+// Extend the linked list class with a new method that returns the node at the midpoint of the linked list using no more than one loop
+
+extension LinkedList {
+    
+    var centerNode: LinkedListNode<T>? {
+        var slow = start
+        var fast = start
+        
+        while fast != nil && fast?.nextNode != nil {
+            slow = slow?.nextNode
+            fast = fast?.nextNode?.nextNode
+        }
+        
+        return slow
+    }
+}
+
+func challenge44Test(withString: String) {
+    let list = LinkedList<Character>()
+    var previousNode: LinkedListNode<Character>? = nil
+    
+    for number in withString {
+        let newNode = LinkedListNode(letter: number)
+        
+        if let predecessor = previousNode {
+            predecessor.nextNode = newNode
+        } else {
+            list.start = newNode
+        }
+        previousNode = newNode
+    }
+    
+    print(list.centerNode?.letter ?? "c")
+}
+
+challenge44Test(withString: "12345")
+challenge44Test(withString: "1234")
+challenge44Test(withString: "abcdefghijklmnopqrstuvwxyz")
+
+/**********************************************************/
+// Challenge 45
+// Traversing the tree
+// Complete challenge 54 first!
+
+/**********************************************************/
+// Challenge 46
+// Recreate map()
+// Write an extension for all  collections that reimplements the map method
+
+extension Collection {
+    
+    // Generic method that accepts a closure operating on our element type and returns a new type, with the whole method returning an array of that type
+    func challenge46<T>(_ transform: (Iterator.Element) throws -> T) rethrows -> [T] {
+        
+        // create the return array
+        var returnValue = [T]()
+        
+        // loop over all items, trying the transformation and appending it to our return array
+        for item in self {
+            returnValue.append(try transform(item))
+        }
+        
+        return returnValue
+    }
+    
+    // Marking the parameter with throws means that it might throw, not that it will throw.  Marking the whole thing as rethrows means it needs to be used with a try/catch block only when its parameter really does throw.
+    
+}
+
+/**********************************************************/
+// Challenge 47
+// Recreate min()
+
+extension Collection where Iterator.Element: Comparable {
+    
+    func challenge47() -> Iterator.Element? {
+        var min: Iterator.Element?
+        
+        for item in self {
+            if min == nil {
+                min = item
+            } else if item < min! {
+                min = item
+            }
+        }
+        
+        return min
+    }
+    
+    // Use guard let to get rid of optionality
+    func challenge47b() -> Iterator.Element? {
+        guard var min = self.first else { return nil }
+        
+        for item in self {
+            if item < min {
+                min = item
+            }
+        }
+        
+        return min
+    }
+    
+    // Without accessing the first element twice we get
+    func challenge47c() -> Iterator.Element? {
+        var iterator = makeIterator()
+        guard var min = iterator.next() else { return nil}
+        
+        while let item = iterator.next() {
+            if item < min {
+                min = item
+            }
+        }
+        
+        return min
+    }
+    
+    // We can also use reduce()
+    func challenge47d() -> Iterator.Element? {
+        guard let min = self.first else { return nil }
+        return reduce(min) { $1 < $0 ? $1 : $0 }
+        
+        // If the second element is lower than the first element, set min to the second element.  Else set it equal to the first
+    }
+    
+    // We can also use IteratorSequence to avoid getting the first element twice
+    func challenge47e() -> Iterator.Element? {
+        var iterator = makeIterator()
+        guard let min = iterator.next() else { return nil }
+        
+        return IteratorSequence(iterator).reduce(min) { $1 < $0 ? $1 : $0 }
+    }
+    
+    // A sneaky soluction where we sort then get the first element
+    func challenge47f() -> Iterator.Element? {
+        return self.sorted().first
+    }
+}
+
+assert([1,2,3].challenge47() == 1, "Challenge 47 failed")
+assert(["q", "f", "k"].challenge47() == "f", "Challenge 47 failed")
+assert([4096, 256, 16].challenge47() == 16, "Challenge 47 failed")
+assert([String]().challenge47() == nil, "Challenge 47 failed")
+
+/**********************************************************/
+// Challenge 48
+// Implement a deque data structure
+// Create a new data type that models a double-ended queue using generics.  You should be able to push items to the front or back, pop them from the front or back and get the number of items.
+
+struct Deque<T> {
+    
+    private var contents = [T]()
+    var count: Int {
+        get {
+            return contents.count
+        }
+        
+    }
+
+    
+    mutating func pushBack(_ input: T) {
+        
+        // Simply add the new element at the end of the deque array
+        contents.append(input)
+        
+    }
+    
+    mutating func pushFront(_ input: T) {
+        contents.insert(input, at: 0)
+    }
+    
+    mutating func popFront() -> T? {
+        if contents.isEmpty {
+            return nil
+        } else {
+            return contents.removeFirst()
+        }
+    }
+    
+    
+    mutating func popBack() -> T? {
+        return contents.popLast()
+    }
+    
+}
+
+func challenge48() {
+    var numbers = Deque<Int>()
+    
+    numbers.pushBack(5)
+    numbers.pushBack(8)
+    numbers.pushBack(3)
+    
+    assert(numbers.count == 3, "Challenge 48 failed")
+    assert(numbers.popFront()! == 5, "Challenge 48 failed")
+    assert(numbers.popBack()! == 3, "Challenge 48 failed")
+    assert(numbers.popFront()! == 8, "Challenge 48 failed")
+    assert(numbers.popBack() == nil, "Challenge 48 failed")
+}
+
+challenge48()
+
+/**********************************************************/
+// Challenge 49
+// Sum the even repeats
+

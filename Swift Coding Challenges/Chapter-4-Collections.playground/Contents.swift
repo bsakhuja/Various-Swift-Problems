@@ -168,28 +168,41 @@ assert(["a", "b", "ab", "0"].challenge42(indexOf: "ab") == 2, "Challenge 42 fail
 // Linked lists
 // Create a linked list of lower English alphabet letters along with a method that traverses all nodes and prints their letters on a single line separated by spaces.
 
-class LinkedListNode<T> {
+class LinkedListNode<T>: Hashable {
+    
+
     
     var letter: T
     var nextNode: LinkedListNode?
+    var hashValue: Int // hashable for problem 53
     
-    init(letter: T) {
+    init(letter: T, hashValue: Int) {
         self.letter = letter
+        self.hashValue = hashValue
     }
     
+    static func == (lhs: LinkedListNode<T>, rhs: LinkedListNode<T>) -> Bool {
+        return lhs.hashValue == rhs.hashValue
+    }
     
 }
 
 class LinkedList<T> {
     var start: LinkedListNode<T>?
+    private var uniqueHashValue = 0
     
     func printNodes() {
         var currentNode = start
         
         while let node = currentNode {
-//            print(node.letter, terminator: " ")
+            //            print(node.letter, terminator: " ")
             currentNode = node.nextNode
         }
+    }
+    
+    func getUniqueHashValue() -> Int {
+        uniqueHashValue += 1
+        return uniqueHashValue
     }
 }
 
@@ -198,7 +211,7 @@ func challenge43() {
     var previousNode: LinkedListNode<Character>? = nil
     
     for letter in "abcdefghijklmnopqrstuvwxyz" {
-        let node = LinkedListNode(letter: letter)
+        let node = LinkedListNode(letter: letter, hashValue: Int(arc4random()))
         
         if let predecessor = previousNode {
             predecessor.nextNode = node
@@ -239,7 +252,7 @@ func challenge44Test(withString: String) {
     var previousNode: LinkedListNode<Character>? = nil
     
     for number in withString {
-        let newNode = LinkedListNode(letter: number)
+        let newNode = LinkedListNode(letter: number, hashValue: Int(arc4random()))
         
         if let predecessor = previousNode {
             predecessor.nextNode = newNode
@@ -249,7 +262,7 @@ func challenge44Test(withString: String) {
         previousNode = newNode
     }
     
-//    print(list.centerNode?.letter ?? "c")
+    //    print(list.centerNode?.letter ?? "c")
 }
 
 challenge44Test(withString: "12345")
@@ -374,7 +387,7 @@ struct Deque<T> {
         }
         
     }
-
+    
     
     mutating func pushBack(_ input: T) {
         
@@ -460,7 +473,7 @@ assert(challenge49(1, 1, 2, 2, 3, 3, 4, 4) == 10, "Challenge 49 failed")
 // Write a function that accepts an array of positive and negative numbers and returns a closed range containing the position of the contiguous positive numbers that sum to the highest value or nil if nothing was found.
 
 func challenge50(input: [Int]) -> CountableClosedRange<Int>? {
-
+    
     var bestRange: CountableClosedRange<Int>? = nil
     var bestSum: Int = 0
     
@@ -483,7 +496,7 @@ func challenge50(input: [Int]) -> CountableClosedRange<Int>? {
             // We have a negative number. Reset the current range
             currentSum = 0
             currentStart = nil
-        
+            
         }
     }
     
@@ -500,3 +513,328 @@ assert(challenge50(input: [Int]()) == nil,  "Challenge 50 failed")
 /**********************************************************/
 // Challenge 51
 // Reversing linked lists
+// Expand your code from Challenge 43 so that it has a reversed() method that returns a copy of itself in reverse
+
+extension LinkedList {
+    func reversed() -> LinkedList<T> {
+        
+        // Create the copy for our return
+        let copy = LinkedList<T>()
+        
+        // Check if we have nodes to copy
+        if let startNode = start {
+            // Copy the original start node
+            var previousCopyNode = LinkedListNode(letter: startNode.letter, hashValue: Int(arc4random()))
+            
+            // Now start copying from the next node
+            var currentNode = start?.nextNode
+            
+            while let node = currentNode {
+                // create a copy of this node
+                let copyNode = LinkedListNode(letter: node.letter, hashValue: Int(arc4random()))
+                
+                // Make it point to the node we created previously
+                copyNode.nextNode = previousCopyNode
+                
+                // Then make it the previous node so we can move forward
+                previousCopyNode = copyNode
+                currentNode = currentNode?.nextNode
+            }
+            
+            // We're at the end of the list, which is our new start
+            copy.start = previousCopyNode
+        }
+        
+        return copy
+    }
+    
+    
+    // Alternatively, we could utilize a copy() method in our reverse method
+    
+    func copy() -> LinkedList<T> {
+        
+        // Create the copy to return.  Initially an empty list.
+        let copy = LinkedList<T>()
+        
+        // If the list has a start node...
+        if let startNode = start {
+            
+            // ... set the start of the copy to the list's start node
+            copy.start = LinkedListNode(letter: startNode.letter, hashValue: Int(arc4random()))
+            
+            // Then, create a variable that holds the last iteration's node
+            var previousCopyNode = copy.start
+            
+            // Create a variable that holds the current iteration's node
+            var currentNode = start?.nextNode
+            
+            // Traverse the linked list from start to finish
+            while let node = currentNode {
+                
+                // Create a copy of the node
+                let copyNode = LinkedListNode(letter: node.letter, hashValue: Int(arc4random()))
+                
+                // Set the previous node's next node property to the current node we're copying
+                previousCopyNode?.nextNode = copyNode
+                
+                // Set the previous node to the next node
+                previousCopyNode = copyNode
+                
+                // Set the current node to the next node
+                currentNode = currentNode?.nextNode
+            }
+        }
+        
+        // Finally return the reference to the head
+        return copy
+    }
+    
+    func reverseInPlace() {
+        
+        // Create a variable that points to the current node we're visiting.  Initially the start node for the list.
+        var currentNode = start
+        
+        // Create a variable for the new next node that we'll assign to the current node's nextNode property
+        var newNext: LinkedListNode<T>? = nil
+        
+        // Visit each node
+        while let node = currentNode {
+            
+            // Create the next node
+            let next = node.nextNode
+            
+            // Assign the current node's nextNode to the new next node
+            node.nextNode = newNext
+            
+            // Set the newNext node to the current node (essentially swapping pointers)
+            newNext = node
+            
+            // Set the current node to the next node to continue down the linked list
+            currentNode = next
+            
+        }
+        
+        // Set the start node to the new
+        start = newNext
+    }
+    
+    func reversedUsingCopyAndReverseInPlace() -> LinkedList<T> {
+        let copy = self.copy()
+        copy.reverseInPlace()
+        return copy
+    }
+}
+
+/**********************************************************/
+// Challenge 52
+// Sum an array of numbers
+// Write one function that sums an array of numbers. The array might contain all integers, all doubles, or all floats.
+
+func challenge52<T: Numeric>(numbers: [T]) -> T {
+    var total: T = 0
+    
+    for number in numbers {
+        total = total + number
+    }
+    
+    return total
+}
+
+func challenge52b<T: Numeric>(numbers: [T]) -> T {
+    return numbers.reduce(0, +)
+}
+
+import Accelerate
+
+// Use the Accelerate framework to add floats/doubles really fast
+func challenge52c(numbers: [Double]) -> Double {
+    var result: Double = 0.0
+    vDSP_sveD(numbers, 1, &result, vDSP_Length(numbers.count))
+    return result
+}
+
+/**********************************************************/
+// Challenge 53
+// Linked lists with a loop
+// Write a method for your linked list that returns the node at the start of its loop (i.e. the one that is linked back to)
+extension LinkedList {
+    func challenge53() -> LinkedListNode<T>? {
+        // Use our linked list's start node as the initial node to read
+        var currentNode = start
+        
+        // The set of seen nodes
+        var seen = Set<LinkedListNode<T>>()
+        
+        // Go through the linked list...
+        while let node = currentNode {
+            
+            // ...if we've seen the node before, there is a loop...
+            if seen.contains(node) {
+                
+                // ...so we return the node
+                return node
+            } else {
+                
+                // ...if we are visiting a new node, we add it to our seen set then proceed to visit the next node.
+                seen.insert(node)
+                currentNode = node.nextNode
+            }
+        }
+        
+        return nil
+    }
+    
+    // Using Floyd's cycle-finding algorithm
+    func challenge53b() -> LinkedListNode<T>? {
+        // We have both a fast pointer and slow pointer
+        var slow = start
+        var fast = start
+        
+        // Go through the linked list until we find the end
+        while fast != nil && fast?.nextNode != nil {
+            
+            // Slow moves one space, fast moves two
+            slow = slow?.nextNode
+            fast = fast?.nextNode?.nextNode
+            
+            // If fast and slow meet, we've found a loop, so exit the while loop
+            if slow === fast {
+                break
+            }
+        }
+        
+        // If fast or its successor is nil, we've made it to the end of the list, so there is no loop
+        guard fast != nil || fast?.nextNode != nil else {
+            return nil
+        }
+        
+        // If we're here, we know there is a loop
+        slow = start
+        
+        // Loop through until we've found another match
+        while slow! !== fast! {
+            // move slow and fast at the same speed now
+            slow = slow?.nextNode
+            fast = fast?.nextNode
+        }
+        
+        // At this point, slow and fast are the same, so return either of them.
+        
+        return slow
+    }
+    
+}
+
+/**********************************************************/
+// Challenge 54
+// Binary search trees
+// Create a binary search tree data structure that can be initialized from an unordered array of comparable values, then write a method that returns whether the tree is balanced
+
+class Node<T> {
+    var key: T
+    var left: Node<T>?
+    var right: Node<T>?
+    
+    init(key: T) {
+        self.key = key
+    }
+}
+
+class BinarySearchTree<T: Comparable>: CustomStringConvertible {
+    
+    // Description from CustomStringConvertable protocol to print the tree in a nice way
+    var description: String {
+        guard let first = root else { return "(Empty)"}
+        var queue = [Node<T>]()
+        queue.append(first)
+        
+        var output = ""
+        
+        while queue.count > 0 {
+            var nodesAtCurrentLevel = queue.count
+            
+            while nodesAtCurrentLevel > 0 {
+                let node = queue.removeFirst()
+                output += "\(node.key)"
+                
+                if node.left != nil { queue.append(node.left!) }
+                if node.right != nil { queue.append(node.right!) }
+                
+                nodesAtCurrentLevel -= 1
+            }
+            output += "\n"
+        }
+        
+        return output
+    }
+    
+    var root: Node<T>?
+    
+    init(array: [T]) {
+        
+        // Iterate through every item in the array
+        for item in array {
+            // Create a placed property thats true when we've created a node for this item
+            var placed = false
+            
+            // Check if we have a root node
+            if let rootNode = root {
+                
+                // Make the root node our tracker
+                var tracker = rootNode
+                
+                while placed == false {
+                    
+                    if item <= tracker.key {
+                        if tracker.left == nil {
+                            // Make the item the left node if the left node is nil
+                            tracker.left = Node(key: item)
+                            placed = true
+                        }
+                        
+                        // We already have a left node.  Make that the tracker so we can compare against it.
+                        tracker = tracker.left!
+                        
+                    } else {
+                        // This item is greater than our tracker, so it goes to the right
+                        if tracker.right == nil {
+                            // Make the item the right node if the right node is nil
+                            tracker.right = Node(key: item)
+                            placed = true
+                        }
+                        
+                        // We already have a right node.  Make that the tracker so we can compare against it.
+                        tracker = tracker.right!
+                        
+                    }
+                }
+            } else {
+                root = Node(key: item)
+            }
+        }
+    }
+    
+    func isBalanced() -> Bool {
+        func minDepth(from node: Node<T>?) -> Int {
+            guard let node = node else { return 0 }
+            let returnValue = 1 + min(minDepth(from: node.left), minDepth(from: node.right))
+            print("Got min depth \(returnValue) for \(node.key)")
+            return returnValue
+        }
+        
+        func maxDepth(from node: Node<T>?) -> Int {
+            guard let node = node else { return 0 }
+            let returnValue = 1 + max(maxDepth(from: node.left), maxDepth(from: node.right))
+            print("Got max depth \(returnValue) for \(node.key)")
+            return returnValue
+        }
+        
+        guard let root = root else { return true }
+        
+        let difference = maxDepth(from: root) - minDepth(from: root)
+        return difference <= 1
+    }
+}
+
+//print(BinarySearchTree(array: [2,1,3]).description)
+print(BinarySearchTree(array: [5, 1, 7, 6, 2, 1, 9]).description)

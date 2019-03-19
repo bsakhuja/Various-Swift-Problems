@@ -1,5 +1,7 @@
 import UIKit
 
+// MARK: - Online challenge
+
 // Write a function find duplicates that given an array of integers, it returns any numbers that show up more than once.  If a number shows up three times, it should be listed twice.
 
 func findDuplicates(inputArray: [Int]) -> [Int] {
@@ -32,7 +34,7 @@ assert(findDuplicates(inputArray: []) == [], "findDuplicates(inputArray:) failed
 // Write a function doesClick(list:, target:) that given a list of integers and a target integer, returns true if the list clicks and false if the list does not click.  "Clicking" means if for the list, one can place a + (add) or * (multiply) between every number to reach the target integer.  You must use all the numbers in the list.
 
 func doesClick(list: [Int], target: Int) -> Bool {
-
+    
     var possibleResults = [Int]()
     
     for (index, number) in list.enumerated() {
@@ -57,12 +59,12 @@ func doesClick(list: [Int], target: Int) -> Bool {
 doesClick(list: [2, 3, 5], target: 25)
 
 
-assert(doesClick(list: [2, 3, 5], target: 25) == true, "doesClick(list: target:) failed")
-assert(doesClick(list: [2, 3, 5], target: 26) == false, "doesClick(list: target:) failed")
-assert(doesClick(list: [2, 3, 5], target: 5) == false, "doesClick(list: target:) failed")
+//assert(doesClick(list: [2, 3, 5], target: 25) == true, "doesClick(list: target:) failed")
+//assert(doesClick(list: [2, 3, 5], target: 26) == false, "doesClick(list: target:) failed")
+//assert(doesClick(list: [2, 3, 5], target: 5) == false, "doesClick(list: target:) failed")
 
 
-// Phone screen
+// MARK: - Phone screen
 
 // For 1 through 19
 func digitToString(_ digit: Int) -> String {
@@ -106,53 +108,107 @@ func tensToString(_ tensValue: Int) -> String {
 }
 
 // 1 to 999,999
+//func integerToString(_ number: Int) -> String {
+//
+//    var returnString: String = ""
+//
+//    let hundredThousands = (number / 100000)
+//    let tenThousands  = (number / 10000)
+//    let thousands = (number / 1000)
+//    let hundreds = (number / 100)
+//    let teens = (number % 100)
+//
+//    if hundredThousands < 10 && tenThousands == 0 {
+//        returnString += "\(digitToString(hundredThousands)) hundred thousand "
+//    } else {
+//        returnString += "\(digitToString(hundredThousands)) hundred "
+//
+//    }
+//
+//    if tenThousands < 100 &&  tenThousands > 0 {
+//        if tenThousands % 10 == 0 {
+//            returnString += "\(tensToString(tenThousands))"
+//        } else {
+//            returnString += "\(tensToString(tenThousands/10)) \(digitToString(tenThousands % 10)) thousand "
+//        }
+//    }
+//
+//    if thousands < 10 {
+//        returnString += "\(digitToString(thousands)) thousand "
+//    }
+//
+//    if hundreds < 10 {
+//        returnString += "\(digitToString(hundreds)) hundred "
+//    }
+//
+//    if teens < 20 { // 1 - 19
+//        returnString += "\(digitToString(teens))"
+//    } else { // 20 - 99
+//        if teens % 10 == 0 {
+//            returnString += "\(tensToString(teens/10))"
+//        } else {
+//            returnString += "\(tensToString(teens/10)) \(digitToString(teens % 10))"
+//        }
+//    }
+//
+//    return returnString
+//}
+
+
 func integerToString(_ number: Int) -> String {
     
-    var returnString: String = ""
+    // Ensure the number input is in the correct range 0 < x < 1000000
+    guard number < 1000000 else { return "Input is too large" }
+    guard number > 0 else { return "Input is too small "}
     
-    let hundredThousands = (number / 100000)
-    let tenThousands  = (number / 10000)
-    let thousands = (number / 1000)
-    let hundreds = (number / 100)
-    let teens = (number % 100)
+    var number = number
+    var digits: [Int] = []
     
-    if hundredThousands < 10 && tenThousands == 0 {
-        returnString += "\(digitToString(hundredThousands)) hundred thousand "
-    } else {
-        returnString += "\(digitToString(hundredThousands)) hundred "
+    while number != 0 {
+        digits.append(abs(number%10))
+        number /= 10
+    }
+    
+    var plainEnglish: [String] = []
+    
+    var isTeen = false
+    let totalPlaces = digits.count
+    var currentPlace = 0
+    
+    for (index, digit) in digits.enumerated().reversed() {
+        currentPlace = totalPlaces - index
+        if currentPlace % 3 == 0 && digit > 0 {
+            plainEnglish.append(digitToString(digit) + " hundred")
+        } else if (currentPlace + 1) % 3 == 0 {
+            if digit == 1 {
+                isTeen = true
+                continue;
+            } else {
+                isTeen = false
+                plainEnglish.append(tensToString(digit))
+            }
+        } else {
+            if isTeen {
+                plainEnglish.append(digitToString(digit))
+            } else {
+                plainEnglish.append(digitToString(digit))
+            }
+        }
         
-    }
-    
-    print(tenThousands)
-    if tenThousands < 100 &&  tenThousand > 0 {
-        if tenThousands % 10 == 0 {
-            returnString += "\(tensToString(tenThousands))"
-        } else {
-            returnString += "\(tensToString(tenThousands/10)) \(digitToString(tenThousands % 10)) thousand "
+        if currentPlace == 4 {
+            plainEnglish.append("thousand")
+        } else if currentPlace == 7 {
+            plainEnglish.append("million")
+        } else if currentPlace == 10 {
+            plainEnglish.append("billion")
         }
     }
+
     
-    if thousands < 10 {
-        returnString += "\(digitToString(thousands)) thousand "
-    }
+    let finalString = plainEnglish.joined(separator: " ")
     
-    if hundreds < 10 {
-        returnString += "\(digitToString(hundreds)) hundred "
-    }
-    
-    if teens < 20 { // 1 - 19
-        returnString += "\(digitToString(teens))"
-    } else { // 20 - 99
-        if teens % 10 == 0 {
-            returnString += "\(tensToString(teens/10))"
-        } else {
-            returnString += "\(tensToString(teens/10)) \(digitToString(teens % 10))"
-        }
-    }
-    
-    return returnString
+    return finalString
 }
 
-print(integerToString(200263))
-
+print(integerToString(12345))
 

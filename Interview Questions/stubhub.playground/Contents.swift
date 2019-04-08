@@ -25,41 +25,43 @@ import Foundation
 
 func compress(input: String) -> String {
     
+    // Initialize the output string
     var output: String = ""
-    var count: Int = 0
-    var currentCharacter: Character?
-    var index: Int = 0
     
-    for character in input {
-        //        print("character: \(character)  and currentCharacter:  \(currentCharacter)")
+    // Initialize the count of the current character to 0
+    var currentCharacterCount: Int = 0
+    
+    // Initialize the current character
+    var currentCharacter: Character?
+    
+    for (index, character) in input.enumerated() {
+        // print("character: \(character)  and currentCharacter:  \(currentCharacter)")
         
         // this will be executed first for every new input we're given
         if currentCharacter == nil {
+            // set the current character to the first character and increase the character count by 1
             currentCharacter = character
-            count += 1
+            currentCharacterCount += 1
             
-            // this will be executed for every character we're counting
+            // this will be executed for every character (besides the first)
         } else if character == currentCharacter! {
-            count += 1
+            currentCharacterCount += 1
             
             // this will be executed for every new character
         } else {
-            output += String(currentCharacter!) + String(count)
+            output.append("\(currentCharacter!)\(currentCharacterCount)")
             currentCharacter = character
-            count = 1
-            
+            currentCharacterCount = 1
         }
         
         // this will be executed at the end of the array
         if index == input.count - 1 {
-            output += String(currentCharacter!) + String(count)
+            output.append("\(currentCharacter!)\(currentCharacterCount)")
         }
-            
-            
-        index += 1
         
     }
     
+    // Only return the output string if it is shorter than the input.  If the input is shorter, return that.
     if output.count <= input.count {
         return output
     } else {
@@ -70,6 +72,6 @@ func compress(input: String) -> String {
 }
 
 
-print(compress(input: "aabbccc"))
+print(compress(input: "aaabcdefffff"))
 
 

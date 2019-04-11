@@ -3,6 +3,10 @@ import UIKit
 // Questions by Paul Hudson
 
 /**********************************************************/
+/* Beginner */
+/**********************************************************/
+
+/**********************************************************/
 // Question 1
 
 //let i = 3
@@ -15,6 +19,7 @@ import UIKit
 //    print("Number was 3")
 //}
 
+// F
 // Output: the code will not compile due to the fact that the switch was not exhaustive
 
 
@@ -22,6 +27,7 @@ import UIKit
 // Question 2
 //let i = 10.2
 
+// F
 // i has the data type of double
 
 /**********************************************************/
@@ -29,6 +35,7 @@ import UIKit
 //let myStr: String
 //myStr = "shiny"
 
+// F
 // The value of myStr: this code will not compile.
 
 /**********************************************************/
@@ -37,6 +44,7 @@ import UIKit
 //let ns = NSString("Hello")
 //let swift = String(ns)
 
+// A
 // The value of the swift string: this code will not compile.
 
 /**********************************************************/
@@ -48,6 +56,7 @@ import UIKit
 //    print("HELLO, \(name)!")
 //}
 
+// B
 // The output: this code will not compile.
 
 /**********************************************************/
@@ -55,6 +64,7 @@ import UIKit
 
 // How many bits are used to store an Int?
 
+// B
 // Answer: it depends on the device
 
 /**********************************************************/
@@ -66,6 +76,7 @@ import UIKit
 //    print("Hello, \(names[i])!")
 //}
 
+// E
 // The output: this code will not compile
 
 /**********************************************************/
@@ -76,6 +87,7 @@ import UIKit
 //names.append("Clara")
 //names.append("Rory")
 
+// D
 // The number of strings names array contains: this code will not compile
 
 /**********************************************************/
@@ -87,6 +99,7 @@ import UIKit
 //    print("Brought to you by \(name)")
 //}
 
+// C
 // The output: this code will not compile
 // if let is not necessary since names does not contain optional strings
 
@@ -101,6 +114,7 @@ import UIKit
 //    i *= 2
 //} while (i < 128)
 
+// E
 // The output: the code will not compile
 // Use repeat instead of do
 
@@ -111,6 +125,7 @@ import UIKit
 //    print(i)
 //}
 
+// A
 // The output: 1, 2, 3
 
 /**********************************************************/
@@ -120,7 +135,8 @@ import UIKit
 //    print(i)
 //}
 
-// The output: 3, 2, 1
+// D
+// The output: This code will compile but crash.  Swift does not allow you to generate ranges where the initial value is greater than the end value.
 
 
 /**********************************************************/
@@ -134,6 +150,7 @@ import UIKit
 //let serenity = Starship(type: "Firefly", age: 24)
 //print(serenity.type)
 
+// D
 // The output: the code will not compile
 // There are no initializers for the class Starship
 
@@ -150,6 +167,7 @@ import UIKit
 //
 //print(tardis.name)
 
+// B
 // The output: TARDIS
 
 /**********************************************************/
@@ -159,6 +177,7 @@ import UIKit
 //let number = 16.0
 //print("\(number) squared is \(number * number), and its square root is \(sqrt(number))")
 
+// D
 // The output: "16.0 squared is 256.0 and its square root is 4.0"
 
 /**********************************************************/
@@ -170,6 +189,7 @@ import UIKit
 //
 //print("\(sayHello(to: "Jayne"))")
 
+// E
 // The output: "Howdy, Jayne!
 
 /**********************************************************/
@@ -186,6 +206,7 @@ import UIKit
 //var serenity = Spaceship(name: "Serenity")
 //serenity.name = "TARDIS"
 
+// A
 // The output: "I'm called TARDIS"
 
 /**********************************************************/
@@ -208,6 +229,7 @@ import UIKit
 //    print("It's a bit windy")
 //}
 
+// B
 // The output: "It's very windy"
 
 /**********************************************************/
@@ -219,6 +241,7 @@ import UIKit
 //    print(name)
 //}
 
+// E
 // The output: "Serenity", "Sulaco"
 
 /**********************************************************/
@@ -228,17 +251,19 @@ import UIKit
 //let oneThousand = oneMillion / 0_1_0_0_0
 //print(oneThousand)
 
+// C
 // The output: 1000
 
 /**********************************************************/
 // Question 21
 
-let names = ["Serenity", "Sulaco", "Enterprise", "Galactica"]
+//let names = ["Serenity", "Sulaco", "Enterprise", "Galactica"]
+//
+//if let last = names.last {
+//    print(last)
+//}
 
-if let last = names.last {
-    print(last)
-}
-
+// H
 // The output: "Galactica"
 
 /**********************************************************/
@@ -260,44 +285,142 @@ if let last = names.last {
 //    print("The error message was: \(error)")
 //}
 
+// B
 // The output: "The error message was: Forbidden"
 
 /**********************************************************/
 // Question 23
 
-var motto = "Bow ties are cool"
-motto.replacingOccurrences(of: "Bow", with: "Neck") // "Neck ties are cool"
-print(motto) // "Bow ties are cool"
+//var motto = "Bow ties are cool"
+//motto.replacingOccurrences(of: "Bow", with: "Neck") // "Neck ties are cool"
+//print(motto) // "Bow ties are cool"
 
+// E
 // The output: "Bow ties are cool"
 
 /**********************************************************/
 // Question 24
 
+//let first = ["Sulaco", "Nostromo"]
+//let second = ["X-Wing", "TIE Fighter"]
+//let third = first + second
+
+// C
+// The value of third: "Sulaco", "Nostromo", "X-Wing", "TIE Fighter"
+
 /**********************************************************/
 // Question 25
+
+//final class Dog {
+//    func bark() {
+//        print("Woof!")
+//    }
+//}
+//
+//class Corgi: Dog {
+//    override func bark() {
+//        print("Yip!")
+//    }
+//}
+//
+//let muttface = Corgi()
+//muttface.bark()
+
+// F
+// The output: This code will not compile
 
 /**********************************************************/
 // Question 26
 
+//let i = "5"
+//let j = i + i
+
+// D
+// The value of j: "55" (a string)
+
 /**********************************************************/
 // Question 27
+
+//var i = 2
+//
+//repeat {
+//    i *= i * 2
+//} while  i < 100
+//
+//print(i)
+
+// G
+// The output: 128
 
 /**********************************************************/
 // Question 28
 
+//var numbers = [1, 2, 3]
+//numbers += [4]
+
+// C
+// Number of items in numbers: 4 ([1,2,3,4])
+
+
 /**********************************************************/
 // Question 29
+
+//let num = UInt.min
+
+// C
+// Value of num: 0
 
 /**********************************************************/
 // Question 30
 
-/**********************************************************/
-// Question 31
+//import Foundation
+//let number = 16
+//print("\(number) squared is \(number * number), and its square root is \(sqrt(number))")
+
+// C
+// The output: this code will not compile
+
 
 /**********************************************************/
-// Question 32
+/* Intermediate */
+/**********************************************************/
 
 /**********************************************************/
-// Question 33
+// Question 1
+
+let names = ["Pilot": "Wash", "Doctor": "Simon"]
+let doctor = names["doctor"] ?? "Bones"
+print(doctor)
+
+// I
+// Output: "Bones"
+
+/**********************************************************/
+// Question 2
+
+
+
+/**********************************************************/
+// Question 3
+
+/**********************************************************/
+// Question 4
+
+/**********************************************************/
+// Question 5
+
+/**********************************************************/
+// Question 6
+
+/**********************************************************/
+// Question 7
+
+/**********************************************************/
+// Question 8
+
+/**********************************************************/
+// Question 9
+
+/**********************************************************/
+// Question 10
 

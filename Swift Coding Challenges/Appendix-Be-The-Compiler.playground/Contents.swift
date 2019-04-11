@@ -388,9 +388,9 @@ import UIKit
 /**********************************************************/
 // Question 1
 
-let names = ["Pilot": "Wash", "Doctor": "Simon"]
-let doctor = names["doctor"] ?? "Bones"
-print(doctor)
+//let names = ["Pilot": "Wash", "Doctor": "Simon"]
+//let doctor = names["doctor"] ?? "Bones"
+//print(doctor)
 
 // I
 // Output: "Bones"
@@ -398,7 +398,20 @@ print(doctor)
 /**********************************************************/
 // Question 2
 
+func sum(numbers: Int...) -> Int {
+    var result = 0
+    
+    for number in numbers {
+        result += number
+    }
+    
+    return result
+}
 
+let result = sum(numbers: [1,2,3,4,5])
+
+// D
+// The value of result: This code will not compile
 
 /**********************************************************/
 // Question 3
